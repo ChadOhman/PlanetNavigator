@@ -1,0 +1,18 @@
+<Project>
+  <!-- Import user overrides if they exist -->
+  <Import Project="Directory.Build.user.props" Condition="Exists('Directory.Build.user.props')" />
+
+  <!-- Define GameDir with precedence: user.props > env var > default -->
+  <PropertyGroup>
+    <GameDir Condition="'$(GameDir)' == ''">$([System.Environment]::GetEnvironmentVariable('PLANET_CRAFTER_DIR'))</GameDir>
+    <GameDir Condition="'$(GameDir)' == ''">D:\SteamLibrary\steamapps\common\The Planet Crafter</GameDir>
+    <ManagedDir>$(GameDir)\Planet Crafter_Data\Managed</ManagedDir>
+  </PropertyGroup>
+
+  <!-- Common project properties -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

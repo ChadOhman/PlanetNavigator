@@ -1,0 +1,7 @@
+<Project>
+  <!-- Override GameDir if The Planet Crafter is installed elsewhere.
+       Copy this file to Directory.Build.user.props and modify the path as needed. -->
+  <PropertyGroup>
+    <GameDir>D:\SteamLibrary\steamapps\common\The Planet Crafter</GameDir>
+  </PropertyGroup>
+</Project>

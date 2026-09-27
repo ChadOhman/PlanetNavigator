@@ -1,0 +1,12 @@
+{
+  "name": "@planetnavigator/tile-slicer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "slice": "node --experimental-strip-types slice.ts"
+  },
+  "dependencies": {
+    "sharp": "^0.33.5"
+  }
+}

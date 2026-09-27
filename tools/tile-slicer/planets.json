@@ -1,0 +1,45 @@
+{
+  "Prime": {
+    "extent": [-2000, -2000, 3000, 3000],
+    "variants": {
+      "barren": "map_barren.png",
+      "lush": "map_lush.png",
+      "endgame": "map_endgame.png"
+    }
+  },
+  "Humble": {
+    "extent": [-2300, -2300, 2700, 2700],
+    "variants": {
+      "barren": "humble_barren.png",
+      "lush": "humble_lush.png"
+    }
+  },
+  "Selenea": {
+    "extent": [-2000, -2000, 3000, 3000],
+    "variants": {
+      "barren": "selenea_barren.png",
+      "lush": "selenea_lush.png"
+    }
+  },
+  "Aqualis": {
+    "extent": [-3000, -3000, 4000, 4000],
+    "variants": {
+      "barren": "aqualis_barren.png",
+      "lush": "aqualis_lush.png"
+    }
+  },
+  "Toxicity": {
+    "extent": [-2200, -2200, 2800, 2800],
+    "variants": {
+      "barren": "toxicity_barren.jpg",
+      "lush": "toxicity_lush.jpg"
+    }
+  },
+  "Skeo": {
+    "extent": [-4600, -200, 1900, 6300],
+    "variants": {
+      "barren": "skeo_barren.png",
+      "lush": "skeo_lush.png"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' file: data: blob:; connect-src 'self' file: http://127.0.0.1:* ws://localhost:*;"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlanetNavigator</title>
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <span class="title">PlanetNavigator</span>
+        <span id="planet-label" class="planet-label">—</span>
+        <div id="toolbar" class="toolbar"></div>
+        <span id="status" class="status-badge">Searching for game…</span>
+      </header>
+      <main>
+        <div id="map-wrap" class="empty">
+          <div id="map"></div>
+          <div id="map-empty">Waiting for the game…</div>
+        </div>
+        <aside id="sidebar">
+          <section id="filters" class="filters"></section>
+          <h3 class="sidebar-heading">Nearby</h3>
+          <ol id="nearby" class="nearby"></ol>
+        </aside>
+      </main>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

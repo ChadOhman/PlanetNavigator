@@ -1,0 +1,24 @@
+{
+  "name": "planetnavigator",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "dist": "electron-vite build && electron-builder",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json"
+  },
+  "dependencies": {
+    "ol": "^10.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6"
+  }
+}

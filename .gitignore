@@ -1,0 +1,16 @@
+node_modules/
+dist/
+out/
+**/bin/
+**/obj/
+.vs/
+*.user
+mod/Directory.Build.user.props
+app/public/tiles/
+app/resources/mod/
+app/resources/bepinex/*.zip
+*.log
+.DS_Store
+Thumbs.db
+.env
+*.tsbuildinfo

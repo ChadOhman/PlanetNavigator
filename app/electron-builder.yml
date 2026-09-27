@@ -1,0 +1,18 @@
+appId: ca.ohman.planetnavigator
+productName: PlanetNavigator
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/**
+extraResources:
+  - from: resources/mod
+    to: mod
+  - from: build/tray.png
+    to: tray.png
+  - from: build/tray@2x.png
+    to: tray@2x.png
+win:
+  icon: build/icon.ico
+  target: nsis
+asar: true

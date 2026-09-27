@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>PlanetNavigator</AssemblyName>
+    <RootNamespace>PlanetNavigator</RootNamespace>
+    <Version>0.1.0</Version>
+    <Description>PlanetNavigator companion map bridge</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BepInExPluginGuid>ca.ohman.planetnavigator</BepInExPluginGuid>
+    <BepInExPluginName>PlanetNavigator</BepInExPluginName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedDir)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(ManagedDir)\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Game types (PlayerMainController, WorldUnitsHandler, ...) derive from Unity.Netcode.NetworkBehaviour -->
+    <Reference Include="Unity.Netcode.Runtime">
+      <HintPath>$(ManagedDir)\Unity.Netcode.Runtime.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(ManagedDir)\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Deploy to game BepInEx plugins folder if it exists -->
+  <Target Name="DeployToGame" AfterTargets="Build" Condition="Exists('$(GameDir)\BepInEx\plugins') and '$(NoDeploy)' != 'true'">
+    <ItemGroup>
+      <DeployFiles Include="$(TargetPath)" />
+      <DeployFiles Include="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+    </ItemGroup>
+    <MakeDir Directories="$(GameDir)\BepInEx\plugins\PlanetNavigator" />
+    <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(GameDir)\BepInEx\plugins\PlanetNavigator" />
+  </Target>
+
+  <!-- Always copy to app resources folder -->
+  <Target Name="CopyToAppResources" AfterTargets="Build">
+    <MakeDir Directories="$(MSBuildThisFileDirectory)..\..\app\resources\mod" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildThisFileDirectory)..\..\app\resources\mod" />
+  </Target>
+
+</Project>

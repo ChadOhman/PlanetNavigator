@@ -1,0 +1,30 @@
+# Third-Party Notices
+
+PlanetNavigator is released under the MIT License (see LICENSE).
+
+This project includes or is derived from the following third-party material:
+
+1. **Planet map imagery**: Derived from akarnokd/ThePlanetCrafterMods
+   - https://github.com/akarnokd/ThePlanetCrafterMods
+   - License: Apache License 2.0
+   - Location: assets/source-maps/ and generated tile pyramids
+   - Usage: The planet minimap images have been processed and converted into tile pyramids for efficient web rendering.
+
+2. **BepInEx**:
+   - https://github.com/BepInEx/BepInEx
+   - License: LGPL-2.1
+   - Version: 5.4.23.5
+   - Status: Redistributed unmodified by the installer
+   - Usage: Plugin framework for The Planet Crafter mod loading.
+
+3. **OpenLayers**:
+   - License: BSD-2-Clause
+   - Usage: Map rendering library used in the Electron app.
+
+4. **Electron**:
+   - License: MIT
+   - Usage: Desktop application framework.
+
+## The Planet Crafter
+
+The Planet Crafter is a copyright work of Miju Games. PlanetNavigator is an unofficial fan-made companion tool and is not affiliated with, endorsed by, or in any way official with Miju Games.
