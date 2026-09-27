@@ -2,6 +2,10 @@
 
 A companion map for [The Planet Crafter](https://store.steampowered.com/app/1284190/The_Planet_Crafter/) – a Windows desktop app that displays a live, interactive map of your planet, tracking your position, scanned resources, and progress.
 
+## Download
+
+Grab the latest Windows installer from the [Releases page](https://github.com/ChadOhman/PlanetNavigator/releases). The installer is not code-signed, so SmartScreen shows "unknown publisher" on first run: choose *More info*, then *Run anyway*. After installing, open Settings › Game setup to install BepInEx and the plugin into your game folder.
+
 ## Architecture
 
 **Mod ↔ App over localhost HTTP/SSE**
