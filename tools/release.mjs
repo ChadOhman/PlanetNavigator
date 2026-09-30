@@ -19,7 +19,7 @@
 
 import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
-import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -34,17 +34,64 @@ function fail(msg) {
   process.exit(1)
 }
 
-/** Runs a command with inherited stdio; exits on failure. `shell` resolves npm/gh .cmd shims on Windows. */
+// Everything is spawned without a shell: real executables only (node, dotnet, gh, git, tar), and
+// the npm CLIs by their JS entry points, so no .cmd shims and no argument-escaping surprises.
+const bin = (pkg, file) => path.join(root, 'node_modules', pkg, file)
+
+/** Runs a command with inherited stdio; exits on failure. */
 function run(cmd, cmdArgs, opts = {}) {
   console.log(`\n$ ${cmd} ${cmdArgs.join(' ')}`)
-  const r = spawnSync(cmd, cmdArgs, { stdio: 'inherit', shell: process.platform === 'win32', cwd: root, ...opts })
+  const r = spawnSync(cmd, cmdArgs, { stdio: 'inherit', cwd: root, ...opts })
+  if (r.error) fail(`${cmd}: ${r.error.message}`)
   if (r.status !== 0) fail(`${cmd} exited with ${r.status ?? r.signal}`)
 }
 
 /** Runs a command and returns trimmed stdout, or null on failure. */
 function capture(cmd, cmdArgs, opts = {}) {
-  const r = spawnSync(cmd, cmdArgs, { encoding: 'utf8', shell: process.platform === 'win32', cwd: root, ...opts })
+  const r = spawnSync(cmd, cmdArgs, { encoding: 'utf8', cwd: root, ...opts })
   return r.status === 0 ? r.stdout.trim() : null
+}
+
+/** Draft releases carrying `tag` (GitHub allows several drafts with the same tag name). */
+function draftsForTag(tag) {
+  const out = capture('gh', ['api', '--paginate', 'repos/ChadOhman/PlanetNavigator/releases'])
+  if (out === null) fail('gh api releases failed')
+  // --paginate concatenates one JSON array per page.
+  const releases = out.replace(/\]\s*\[/g, ',')
+  return JSON.parse(releases).filter((r) => r.draft && r.tag_name === tag)
+}
+
+/**
+ * electron-builder uploads the installer and its blockmap in parallel and, when neither upload
+ * finds a release yet, each creates its own draft. Fold everything into a single draft so the
+ * app finds all assets in one place, re-uploading strays from app/dist under their GitHub names
+ * (spaces become dashes there, which is also what latest.yml references).
+ */
+async function mergeDuplicateDrafts(tag, distDir) {
+  const drafts = draftsForTag(tag)
+  if (drafts.length <= 1) return
+  drafts.sort((a, b) => b.assets.length - a.assets.length || a.id - b.id)
+  const [keep, ...extras] = drafts
+  console.log(`\nMerging ${extras.length} duplicate draft(s) of ${tag} into release ${keep.id}`)
+  const have = new Set(keep.assets.map((a) => a.name))
+  const stage = path.join(distDir, 'upload-stage')
+  await rm(stage, { recursive: true, force: true })
+  await mkdir(stage, { recursive: true })
+  const local = new Map((await readdir(distDir)).map((f) => [f.replace(/\s/g, '-'), path.join(distDir, f)]))
+  for (const extra of extras) {
+    for (const asset of extra.assets) {
+      if (have.has(asset.name)) continue
+      const src = local.get(asset.name)
+      if (!src) fail(`asset ${asset.name} on duplicate draft ${extra.id} has no local file in ${distDir}`)
+      const staged = path.join(stage, asset.name)
+      await copyFile(src, staged)
+      run('gh', ['api', '-X', 'POST', '-H', 'Content-Type: application/octet-stream',
+        `${keep.upload_url.replace(/\{.*$/, '')}?name=${encodeURIComponent(asset.name)}`,
+        '--input', staged, '--silent'])
+      have.add(asset.name)
+    }
+    run('gh', ['api', '-X', 'DELETE', `repos/ChadOhman/PlanetNavigator/releases/${extra.id}`])
+  }
 }
 
 async function readVersions() {
@@ -95,11 +142,13 @@ if (skipMod) {
 }
 
 run('node', ['tools/make-icon.mjs'])
-run('npm', ['run', 'build', '-w', 'app'])
-run('npx', ['electron-builder', '--publish', 'always'], { cwd: appDir })
+run('node', [bin('electron-vite', 'bin/electron-vite.js'), 'build'], { cwd: appDir })
+run('node', [bin('electron-builder', 'cli.js'), '--publish', 'always'], { cwd: appDir })
+
+const distDir = path.join(appDir, 'dist')
+await mergeDuplicateDrafts(tag, distDir)
 
 // Manual-install zip: PlanetNavigator/PlanetNavigator.dll + README, unzip into BepInEx/plugins.
-const distDir = path.join(appDir, 'dist')
 const stage = path.join(distDir, 'mod-zip')
 await rm(stage, { recursive: true, force: true })
 await mkdir(path.join(stage, 'PlanetNavigator'), { recursive: true })
