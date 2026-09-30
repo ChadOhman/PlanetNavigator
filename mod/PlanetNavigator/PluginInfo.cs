@@ -4,6 +4,6 @@ namespace PlanetNavigator
     {
         public const string PLUGIN_GUID = "ca.ohman.planetnavigator";
         public const string PLUGIN_NAME = "PlanetNavigator";
-        public const string PLUGIN_VERSION = "0.1.0";
+        public const string PLUGIN_VERSION = "0.2.0";
     }
 }

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>PlanetNavigator</AssemblyName>
     <RootNamespace>PlanetNavigator</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Description>PlanetNavigator companion map bridge</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BepInExPluginGuid>ca.ohman.planetnavigator</BepInExPluginGuid>
