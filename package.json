@@ -12,7 +12,8 @@
     "dist": "npm run dist -w app",
     "tiles": "npm run slice -w tools/tile-slicer",
     "icon": "node tools/make-icon.mjs",
-    "predist": "node tools/make-icon.mjs"
+    "predist": "node tools/make-icon.mjs",
+    "release": "node tools/release.mjs"
   },
   "engines": {
     "node": ">=22"

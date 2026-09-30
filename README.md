@@ -6,6 +6,8 @@ A companion map for [The Planet Crafter](https://store.steampowered.com/app/1284
 
 Grab the latest Windows installer from the [Releases page](https://github.com/ChadOhman/PlanetNavigator/releases). The installer is not code-signed, so SmartScreen shows "unknown publisher" on first run: choose *More info*, then *Run anyway*. After installing, open Settings › Game setup to install BepInEx and the plugin into your game folder.
 
+The installed app updates itself: it checks GitHub Releases shortly after launch and every few hours, downloads new versions in the background, and asks you to restart (or installs on the next quit). The tray menu has *Check for updates…* for a manual check. After an app update, revisit Settings › Game setup to copy the bundled plugin into the game if it changed.
+
 ## Architecture
 
 **Mod ↔ App over localhost HTTP/SSE**
@@ -40,6 +42,22 @@ Launch the game and load a save, then:
 ```bash
 npm run dev
 ```
+
+## Releasing
+
+Releases are built locally because the mod compiles against the game's own assemblies, which a CI runner does not have.
+
+1. Bump the version in `package.json`, `app/package.json`, `mod/PlanetNavigator/PlanetNavigator.csproj` and `mod/PlanetNavigator/PluginInfo.cs`, then commit and push.
+2. Run the publisher (needs `gh auth login` or `GH_TOKEN`):
+
+   ```bash
+   npm run release
+   ```
+
+   It builds the mod and app, then uploads the installer, blockmap, `latest.yml` and a mod zip to a **draft** release `v<version>`.
+3. On GitHub, write the release notes and click *Publish release*. That creates the tag and makes the update visible to installed apps.
+
+`npm run dist` still builds the installer locally without publishing anything.
 
 ## Troubleshooting
 

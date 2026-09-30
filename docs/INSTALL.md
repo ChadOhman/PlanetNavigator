@@ -25,6 +25,12 @@
    - Load or create a save file
    - Once you spawn into the world, the status badge turns green and the map appears in the app
 
+## Updating
+
+The installed app checks GitHub Releases for new versions shortly after launch and every few hours. When one is found it downloads in the background and asks you to restart; if you choose *Later*, it installs the next time you quit. Right-click the tray icon and choose **Check for updates…** to check on demand.
+
+After an app update, open **Settings › Game Setup** again: if the bundled plugin changed, the status shows it as out of date and one click copies the new `PlanetNavigator.dll` into the game folder (close the game first).
+
 ## Manual Installation via PowerShell Script
 
 If you prefer not to use the app's Settings interface, you can install the mod manually using the provided PowerShell script.

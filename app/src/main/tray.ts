@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, Tray } from 'electron'
 
 import { getSettings, onSettingsChange, updateSettings } from './settings'
 import { loadTrayIcon } from './trayIcon'
+import { checkForUpdatesInteractive, getUpdateState, onUpdateStateChange, restartToInstall } from './updater'
 
 let tray: Tray | null = null
 
@@ -15,7 +16,8 @@ function toggleWindow(win: BrowserWindow): void {
   }
 }
 
-/** Tray icon + context menu (Show/Hide, Always on top, Quit). Left-click toggles the window. */
+/** Tray icon + context menu (Show/Hide, Always on top, Check for updates, Quit). Left-click
+ *  toggles the window. */
 export function createTray(getWindow: () => BrowserWindow | null): Tray {
   const icon = loadTrayIcon('tray.png', 32)
   icon.setTemplateImage(false)
@@ -27,6 +29,7 @@ export function createTray(getWindow: () => BrowserWindow | null): Tray {
     const win = getWindow()
     const settings = getSettings()
     const visible = !!win && win.isVisible() && !win.isMinimized()
+    const update = getUpdateState()
     const menu = Menu.buildFromTemplate([
       {
         label: visible ? 'Hide' : 'Show',
@@ -45,6 +48,14 @@ export function createTray(getWindow: () => BrowserWindow | null): Tray {
           getWindow()?.setAlwaysOnTop(v, 'screen-saver')
         }
       },
+      { type: 'separator' },
+      update.downloadedVersion
+        ? { label: `Restart to update to ${update.downloadedVersion}`, click: () => restartToInstall() }
+        : {
+            label: update.checking ? 'Checking for updates…' : 'Check for updates…',
+            enabled: !update.checking,
+            click: () => void checkForUpdatesInteractive()
+          },
       { type: 'separator' },
       {
         label: 'Quit',
@@ -68,6 +79,7 @@ export function createTray(getWindow: () => BrowserWindow | null): Tray {
   win?.on('minimize', rebuildMenu)
   win?.on('restore', rebuildMenu)
   onSettingsChange(rebuildMenu)
+  onUpdateStateChange(rebuildMenu)
 
   rebuildMenu()
   return tray

@@ -6,6 +6,7 @@ import { registerSetupIpc } from './installer'
 import { registerPoiStoreIpc } from './poiStore'
 import { loadSettings, registerSettingsIpc } from './settings'
 import { createTray } from './tray'
+import { initAutoUpdater } from './updater'
 import { createMainWindow, registerWindowIpc } from './window'
 
 let mainWindow: BrowserWindow | null = null
@@ -20,6 +21,7 @@ app.whenReady().then(async () => {
   registerWindowIpc(() => mainWindow)
   registerSetupIpc(() => mainWindow)
   createTray(() => mainWindow)
+  initAutoUpdater(() => mainWindow)
 
   mainWindow.on('closed', () => {
     mainWindow = null

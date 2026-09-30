@@ -16,3 +16,11 @@ win:
   icon: build/icon.ico
   target: nsis
 asar: true
+# GitHub Releases is both the download page and the electron-updater feed. `electron-builder
+# --publish always` (run by tools/release.mjs) uploads the installer, its blockmap and
+# latest.yml to a draft release; the app's updater reads them once the draft is published.
+publish:
+  provider: github
+  owner: ChadOhman
+  repo: PlanetNavigator
+  releaseType: draft
